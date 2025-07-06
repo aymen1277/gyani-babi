@@ -1,0 +1,107 @@
+// Gyani Babi - Ultimate Fun Chat-Based Advice Site (Tea Cup Edition)
+
+import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+
+export default function GyaniBabi() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [showSpill, setShowSpill] = useState(false);
+  const [babiMood, setBabiMood] = useState('🫖');
+
+  const randomTip = () => {
+    const tips = [
+      "Pyar vyar me kuch nahi rkha, beth k parhlo",
+      "L se? Yes, wo apk L se. plays L se in the bg",
+      "I can treat you better than that piece of shit",
+      "Damn bestie go drink water"
+    ];
+    return tips[Math.floor(Math.random() * tips.length)];
+  };
+
+  const handleSend = () => {
+    if (input.trim()) {
+      const newMessage = {
+        id: Date.now(),
+        text: input.trim(),
+        response: generateResponse(input.trim())
+      };
+      setMessages(prev => [...prev, newMessage]);
+      setInput('');
+      setBabiMood('☕');
+      setShowSpill(true);
+      setTimeout(() => setShowSpill(false), 2000);
+    }
+  };
+
+  const generateResponse = (text) => {
+    // This can be replaced with smarter AI logic later
+    return "👵 Babi says: Beta, " + text.slice(0, 1).toUpperCase() + text.slice(1).toLowerCase() + "... mein sab samajhti hoon. Tum strong ho.";
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-tr from-yellow-100 via-pink-100 to-purple-100 p-6 flex flex-col items-center space-y-10">
+
+      {/* Header */}
+      <h1 className="text-6xl font-black text-center text-rose-700 animate-bounce">
+        🫖 GyaniBabi.com 🫖
+      </h1>
+
+      {/* New Intro */}
+      <div className="text-xl text-center max-w-3xl text-gray-800 bg-white p-4 rounded-2xl shadow-lg border border-pink-300">
+        <p>
+          Gyani Babi ko gyan dene ka buht shoq hai. Spill the tea and get your personalized gyan now. 
+        </p>
+      </div>
+
+      {/* Tip of the Moment */}
+      <div className="bg-purple-100 text-purple-800 text-lg px-4 py-2 rounded-xl shadow-md animate-pulse">
+        💡 Babi’s Tip of the Moment: <strong>{randomTip()}</strong>
+      </div>
+
+      {/* Tea Chat Box */}
+      <Card className="w-full max-w-xl shadow-2xl border-l-8 border-yellow-400 animate-fade-in">
+        <CardContent className="p-6 space-y-6">
+          <h2 className="text-3xl font-bold text-yellow-700">🫖 Tea Chat Box</h2>
+
+          {/* Chat Log */}
+          <div className="max-h-64 overflow-y-auto bg-white rounded-lg p-3 space-y-4 border border-yellow-300">
+            {messages.map(msg => (
+              <div key={msg.id} className="space-y-1">
+                <div className="bg-pink-100 p-2 rounded-lg text-gray-800">👧 You: {msg.text}</div>
+                <div className="bg-purple-100 p-2 rounded-lg text-purple-800">{msg.response}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Input Area */}
+          <div className="flex items-center space-x-2">
+            <Textarea
+              placeholder="Spill your tea here..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="flex-1 min-h-[80px] border-2 border-yellow-300"
+            />
+            <Button onClick={handleSend} disabled={!input.trim()} className="bg-yellow-600 hover:bg-yellow-700 text-white">
+              Send 🍵
+            </Button>
+          </div>
+
+          {/* Tea Cup Animation */}
+          {showSpill && (
+            <div className="w-full flex justify-center">
+              <img
+                src="https://media.tenor.com/jX6zIEkO7LUAAAAj/tea-spill.gif"
+                alt="Spilling tea"
+                width={160}
+                height={160}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
